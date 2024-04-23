@@ -1,6 +1,6 @@
-# Sistema Bancário 2 (funções)
+# Sistema Bancário 3 (orientado a objetos)
 
-Este projeto foi a atualização do projeto de sistema bancario simples, em que o código fonte foi refeito para um padrão de funções. Além disso, foram implementadas as funções de criação de usuário e de criação de conta.
+Este projeto foi a atualização do projeto de sistema bancario 2 (funções), em que o código fonte foi refeito para o paradigma de orientação a objetos. Além disso, foi implementada a função de listar as contas associadas ao cliente.
 
 * [Depósito](#depoisito)
 * [Saque](#saque)
@@ -11,7 +11,8 @@ Este projeto foi a atualização do projeto de sistema bancario simples, em que 
 
 ### Considerações
 
-Este projeto foi implementado de maneira simples e está incluído nos requisitos do bootcamp _**Coding The Future Vivo - Python AI Backend Developer**_. 
+Este projeto está incluído nos requisitos do bootcamp _**Coding The Future Vivo - Python AI Backend Developer**_. 
+Provou ser um desafio significativo de implementar, principalmente porque a programação orientada a objetos era um conceito novo para mim. Dediquei várias horas tentando implementá-lo sozinho, mas eventualmente percebi a necessidade de revisar o projeto com a ajuda de videoaulas para otimizar o código. Para melhor compreensão do funcionamento do código, realizei uma série de testes com prints, os quais posteriormente foram removidos. Além disso, busquei esclarecimentos e sugestões por meio de mentorias.
 
 ## Depoisito
 
