@@ -1,12 +1,33 @@
 from abc import ABC,abstractmethod,abstractproperty
+from datetime import datetime
 import textwrap
 
+class ContaIterador:
+    def __init__ (self, contas):
+        self.contas = contas
+        self.contador = 0
+
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        try:
+            contas = self.contas[self.contador]
+            self.contador +=1
+            return contas
+        except IndexError:
+            raise StopIteration
+    
 class Cliente:
     def __init__(self, endereco):
         self.endereco = endereco
         self.contas = []
 
     def realizar_transacao(self, conta, transacao):
+        if len(conta.historico.transacoes_do_dia()) >= 2:
+            print('Você excedeu o numero de transacoes por dia')
+            return
+        
         transacao.registrar(conta)
 
     def adicionar_conta(self,conta):
@@ -123,8 +144,25 @@ class Historico:
             {
                 'tipo':transacao.__class__.__name__,
                 'valor':transacao.valor,
+                'data':datetime.utcnow().strftime('%d-%m-%Y %H:%M:%S'),
             }
         )
+
+    def gerar_relatorio(self, tipo_transacao = None):
+        if not tipo_transacao:
+            for transacao in self._transacoes:
+                if tipo_transacao is None or transacao ['tipo'] == tipo_transacao:
+                    yield transacao
+
+    def transacoes_do_dia(self):
+        data_atual = datetime.utcnow().date()
+        transacoes = []
+
+        for transacao in self._transacoes:
+            data_transacao = datetime.strptime(transacao['data'], '%d-%m-%Y %H:%M:%S').date()
+            if data_atual == data_transacao:
+                transacoes.append(transacao)
+        return transacoes
 
 class Transacao (ABC):
 
@@ -199,6 +237,15 @@ def recuperar_conta_cliente(cliente):
 
     return cliente.contas[0] 
 
+def log_transacao(func):
+    def func_log(*args,**kwargs):
+        print(datetime.now())
+        resultado = func(*args,**kwargs)
+        print(f'A função solicitada foi {func.__name__}')
+        return resultado
+    return func_log
+
+@log_transacao
 def depositar(clientes):
     cpf = input('Infirme CPF do cliente: ')
     cliente = filtrar_cliente(cpf, clientes)
@@ -213,9 +260,10 @@ def depositar(clientes):
     conta = recuperar_conta_cliente(cliente)
     if not conta:
         return
-
+    
     cliente.realizar_transacao(conta,transacao)
-
+    
+@log_transacao
 def sacar(clientes):
     cpf = input('Informe CPF do cliente: ')
     cliente = filtrar_cliente(cpf, clientes)
@@ -233,6 +281,7 @@ def sacar(clientes):
 
     cliente.realizar_transacao(conta,transacao)
 
+@log_transacao
 def exibir_extrato(clientes):
     cpf = input('Infirme CPF do cliente: ')
     cliente = filtrar_cliente(cpf, clientes)
@@ -253,11 +302,12 @@ def exibir_extrato(clientes):
 
     else:
         for transacao in transacoes:
-            extrato += f'\n {transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}'
+            extrato += f'\n {transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}\nData:{transacao['data']}\n'
 
     print(extrato)
     print(f'Saldo\nR$ {conta.saldo:.2f}')
 
+@log_transacao
 def criar_cliente(clientes):
     cpf = input('Informe CPF do cliente: ').strip()
     cliente = filtrar_cliente(cpf, clientes)
@@ -276,6 +326,7 @@ def criar_cliente(clientes):
 
     print('Cliente cadastrado com sucesso.')
 
+@log_transacao
 def criar_conta(num_conta, clientes, contas):
     cpf = input('Informe CPF do cliente: ')
     cliente = filtrar_cliente(cpf, clientes)
@@ -290,6 +341,7 @@ def criar_conta(num_conta, clientes, contas):
 
     print('A conta foi criada.')
 
+@log_transacao
 def listar_contas(contas):
     for conta in contas:
         print('=' * 100)
@@ -297,7 +349,6 @@ def listar_contas(contas):
 
 def teste(clientes,contas):
     cpf = '123'
-      
     nome = 'Marcelo'
     data_nascimento = '16-12-1994'
     endereco = 'Rua Frei Caneca'
@@ -308,14 +359,14 @@ def teste(clientes,contas):
 
     print('Cliente cadastrado com sucesso.')
 
-    # Criando automaticamente uma conta para o cliente
+    
     numero_conta = 1
     conta = ContaCorrente.nova_conta(cliente=cliente, numero=numero_conta)
     contas.append(conta) 
     cliente.contas.append(conta)
 
     print('A conta foi criada.')
-
+  
 def main():
     clientes = []
     contas = []
@@ -343,11 +394,8 @@ def main():
             listar_contas(contas)
 
         elif opcao == 'teste':
-            teste(clientes,contas)
+            teste(clientes, contas)
 
         elif opcao =='q':
             break
-
-
-
 main()
