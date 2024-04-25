@@ -14,6 +14,8 @@ Este projeto foi a atualização do projeto de sistema bancario 2 (funções), e
 Este projeto está incluído nos requisitos do bootcamp _**Coding The Future Vivo - Python AI Backend Developer**_. 
 Provou ser um desafio significativo de implementar, principalmente porque a programação orientada a objetos era um conceito novo para mim. Dediquei várias horas tentando implementá-lo sozinho, mas eventualmente percebi a necessidade de revisar o projeto com a ajuda de videoaulas para otimizar o código. Para melhor compreensão do funcionamento do código, realizei uma série de testes com prints, os quais posteriormente foram removidos. Além disso, busquei esclarecimentos e sugestões por meio de mentorias.
 
+Dentro do projeto, realizei a implementação de decoradores e das funções de limite máximo de transações por dia no arquivo sistema_bancario3_1.py
+
 ## Depoisito
 
 O depósito consiste em inserir um valor positivo em ponto flutuante que será adicionado ao saldo total. Além disso, o extrato deve conter uma descrição de todos os depósitos realizados.
